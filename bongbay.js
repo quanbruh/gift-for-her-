@@ -113,7 +113,7 @@ function bongbay() {
 
     balloon.style.left = Math.random() * window.innerWidth + "px";
 
-    balloon.addEventListener("click", (e) => {
+    balloon.addEventListener("touchstart", (e) => {
       explodeBalloon(balloon, e);
     });
 
@@ -133,7 +133,7 @@ function bongbay() {
 
     balloon.style.left = Math.random() * window.innerWidth + "px";
 
-    balloon.addEventListener("click", (e) => {
+    balloon.addEventListener("touchstart", (e) => {
       explodeBalloon(balloon, e);
     });
 

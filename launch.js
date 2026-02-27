@@ -34,7 +34,7 @@ body.night {
   align-items: center;
   justify-content: center;
   transition: background 0.5s ease;
-  z-index: 9999; /* đảm bảo click được */
+  z-index: 9999; /* đảm bảo touchstart được */
 }
 
 .sun {
@@ -212,13 +212,13 @@ function createBlackBalloon() {
 
     document.body.appendChild(blackBalloon);
 
-    // Khi click thì phồng to dần
+    // Khi touchstart thì phồng to dần
     let currentScale = 1;
     const maxScale = 10; // phồng tối đa gấp 4 lần
 
-    blackBalloon.addEventListener("click", () => {
+    blackBalloon.addEventListener("touchstart", () => {
       if (currentScale < maxScale) {
-        currentScale += 0.5; // mỗi lần click phồng thêm 0.5
+        currentScale += 0.5; // mỗi lần touchstart phồng thêm 0.5
         blackBalloon.style.transform = `scale(${currentScale})`;
       } else {
         blackBalloon.remove(); // đạt max thì biến mất
@@ -261,8 +261,8 @@ function showDestroyMessage() {
 
 let rocketDestroyed = false; // trạng thái máy bay
 
-// Click tên lửa
-rocket.addEventListener("click", () => {
+// touchstart tên lửa
+rocket.addEventListener("touchstart", () => {
   rocket.style.display = "none";
   rocketDestroyed = true; // đánh dấu đã bị phá hủy
   showDestroyMessage(); // gọi hàm hiển thị chữ
@@ -271,7 +271,7 @@ rocket.addEventListener("click", () => {
 });
 
 // Toggle ngày / đêm
-toggle.addEventListener("click", () => {
+toggle.addEventListener("touchstart", () => {
   document.body.classList.toggle("night");
   document.body.classList.toggle("day");
 
