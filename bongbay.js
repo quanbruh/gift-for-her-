@@ -1,5 +1,3 @@
-
-
 function bongbay() {
   // ===== STYLE =====
   const style = document.createElement("style");
@@ -96,11 +94,14 @@ function bongbay() {
     font-weight: bold;
     color: black;
   }
-
-  /* ===== BÓNG ĐEN ===== */
-  
   `;
   document.head.appendChild(style);
+
+  // ===== HÀM TƯƠNG TÁC CHUNG =====
+  function addInteraction(el, handler) {
+    el.addEventListener("click", handler);
+    el.addEventListener("touchstart", handler);
+  }
 
   // ===== TẠO BÓNG THƯỜNG =====
   function createBalloon() {
@@ -113,7 +114,7 @@ function bongbay() {
 
     balloon.style.left = Math.random() * window.innerWidth + "px";
 
-    balloon.addEventListener("touchstart", (e) => {
+    addInteraction(balloon, (e) => {
       explodeBalloon(balloon, e);
     });
 
@@ -130,10 +131,9 @@ function bongbay() {
   function createSpecialBalloon() {
     const balloon = document.createElement("div");
     balloon.className = "balloon special-balloon";
-
     balloon.style.left = Math.random() * window.innerWidth + "px";
 
-    balloon.addEventListener("touchstart", (e) => {
+    addInteraction(balloon, (e) => {
       explodeBalloon(balloon, e);
     });
 
@@ -149,8 +149,10 @@ function bongbay() {
   // ===== NỔ BÓNG =====
   function explodeBalloon(balloon, e) {
     balloon.classList.add("explode");
-    spawnConfetti(e.clientX, e.clientY);
-    showMessage(e.clientX, e.clientY);
+    const x = e.clientX || (e.touches && e.touches[0].clientX);
+    const y = e.clientY || (e.touches && e.touches[0].clientY);
+    spawnConfetti(x, y);
+    showMessage(x, y);
     setTimeout(() => balloon.remove(), 500);
   }
 
@@ -212,7 +214,6 @@ function bongbay() {
     timeLeft--;
     timer.textContent = timeLeft;
 
-    // Spawn bóng đặc biệt giữa thời gian
     if (timeLeft === Math.floor(initialTime / 2) && !specialBalloonSpawned) {
       specialBalloonSpawned = true;
       createSpecialBalloon();
@@ -225,13 +226,9 @@ function bongbay() {
     }
   }, 1000);
 
-  // ===== TẠO BÓNG ĐEN =====
-  
-
   // ===== KẾT THÚC GAME =====
   function endGame() {
     timer.remove();
     document.dispatchEvent(new Event("gameEnded"));
-    
   }
 }

@@ -2,6 +2,13 @@
 const style = document.createElement("style");
 style.textContent = `
 body {
+
+    margin:0;
+    padding:0;
+    height:100%;
+    
+    
+
     height: 100vh;
     display: flex;
     justify-content: flex-end;
@@ -12,8 +19,45 @@ body {
     position: relative;
 }
 
+.container{
+    display:flex;
+    width:100%;
+    height:100%;
+}
+
+.left {
+    width:50%;
+    display:flex;
+    justify-content:center;   /* căn giữa ngang */
+    align-items:center;       /* căn giữa dọc */
+}
+
+
+.right {
+    width:50%;
+    position:relative;
+    display:flex;
+    justify-content:center;   /* căn giữa ngang */
+    align-items:center;       /* căn giữa dọc */
+}
+
+
+#canvas{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1;
+}
+
 /* Lock */
 .lock-screen {
+
+    position:relative;
+    z-index:2;
+    
+
     width: 66%;                  
     height: 100%;                
     display: flex;
@@ -181,6 +225,15 @@ lockScreen.innerHTML = `
 `;
 
 document.body.appendChild(lockScreen);
+
+
+
+// ===== META VIEWPORT =====
+const meta = document.createElement("meta");
+meta.name = "viewport";
+meta.content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no";
+document.head.appendChild(meta);
+
 
 // Hint bên trái
 const hintLeft = document.createElement("div");

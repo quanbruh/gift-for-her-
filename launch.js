@@ -1,6 +1,5 @@
 import { galaxy } from './galaxy.js';
 
-
 // ====== TẠO STYLE ======
 const style = document.createElement("style");
 style.textContent = `
@@ -34,7 +33,7 @@ body.night {
   align-items: center;
   justify-content: center;
   transition: background 0.5s ease;
-  z-index: 9999; /* đảm bảo touchstart được */
+  z-index: 9999;
 }
 
 .sun {
@@ -113,21 +112,16 @@ body.night .moon {
   cursor: pointer;
   transition: transform 0.3s ease, opacity 1.5s ease;
   background: black;
-  opacity: 0; /* mặc định ẩn */
+  opacity: 0;
 }
 
-/* Ban ngày - fade out */
 body.day .black-balloon {
   opacity: 0;
 }
 
-/* Ban đêm - fade in */
 body.night .black-balloon {
   opacity: 1;
 }
-
-
-
 
 .stars {
   position: absolute;
@@ -154,9 +148,6 @@ body.night .black-balloon {
 
 body.night .stars {
   opacity: 1;
-
-
-
 }
 `;
 document.head.appendChild(style);
@@ -180,7 +171,6 @@ const toggle = document.createElement("div");
 toggle.className = "toggle-btn";
 toggle.innerText = "☀️/🌙";
 
-// Append vào body
 document.body.appendChild(sun);
 document.body.appendChild(rocket);
 document.body.appendChild(moon);
@@ -201,36 +191,36 @@ function startRocket() {
   rocket.style.left = window.innerWidth + "px";
 }
 
+// ====== HÀM TƯƠNG TÁC CHUNG ======
+function addInteraction(el, handler) {
+  el.addEventListener("click", handler);
+  el.addEventListener("touchstart", handler);
+}
 
-
+// ====== BÓNG BAY ======
 function createBlackBalloon() {
-    const blackBalloon = document.createElement("div");
-    blackBalloon.className = "black-balloon";
-    blackBalloon.style.background = "black";
-    blackBalloon.style.left = (window.innerWidth / 2 - 50) + "px";
-    blackBalloon.style.top = (window.innerHeight / 2 - 70) + "px";
+  const blackBalloon = document.createElement("div");
+  blackBalloon.className = "black-balloon";
+  blackBalloon.style.left = (window.innerWidth / 2 - 50) + "px";
+  blackBalloon.style.top = (window.innerHeight / 2 - 70) + "px";
+  document.body.appendChild(blackBalloon);
 
-    document.body.appendChild(blackBalloon);
+  let currentScale = 1;
+  const maxScale = 10;
 
-    // Khi touchstart thì phồng to dần
-    let currentScale = 1;
-    const maxScale = 10; // phồng tối đa gấp 4 lần
+  addInteraction(blackBalloon, () => {
+    if (currentScale < maxScale) {
+      currentScale += 0.5;
+      blackBalloon.style.transform = `scale(${currentScale})`;
+    } else {
+      blackBalloon.remove();
+      document.body.innerHTML = "";
+      galaxy();
+    }
+  });
+}
 
-    blackBalloon.addEventListener("touchstart", () => {
-      if (currentScale < maxScale) {
-        currentScale += 0.5; // mỗi lần touchstart phồng thêm 0.5
-        blackBalloon.style.transform = `scale(${currentScale})`;
-      } else {
-        blackBalloon.remove(); // đạt max thì biến mất
-        document.body.innerHTML = "";
-        galaxy();
-        
-      }
-    });
-  }
-
-
-// Hàm hiển thị chữ "Phá huỷ bóng bay"
+// ====== HIỂN THỊ CHỮ ======
 function showDestroyMessage() {
   const msg = document.createElement("div");
   msg.textContent = "Phá huỷ bóng bay";
@@ -248,43 +238,34 @@ function showDestroyMessage() {
 
   document.body.appendChild(msg);
 
-  // Sau 2 giây thì fade và remove
   setTimeout(() => {
     msg.style.opacity = "0";
     setTimeout(() => msg.remove(), 2000);
   }, 2000);
 }
 
+let rocketDestroyed = false;
 
-
-
-
-let rocketDestroyed = false; // trạng thái máy bay
-
-// touchstart tên lửa
-rocket.addEventListener("touchstart", () => {
+// ====== TƯƠNG TÁC TÊN LỬA ======
+addInteraction(rocket, () => {
   rocket.style.display = "none";
-  rocketDestroyed = true; // đánh dấu đã bị phá hủy
-  showDestroyMessage(); // gọi hàm hiển thị chữ
+  rocketDestroyed = true;
+  showDestroyMessage();
   bongbay();
-
 });
 
-// Toggle ngày / đêm
-toggle.addEventListener("touchstart", () => {
+// ====== TOGGLE NGÀY/ĐÊM ======
+addInteraction(toggle, () => {
   document.body.classList.toggle("night");
   document.body.classList.toggle("day");
 
   if (document.body.classList.contains("day")) {
-    // BAN NGÀY
     if (!rocketDestroyed) {
       rocket.style.display = "block";
       rocket.style.left = "-120px";
       setTimeout(startRocket, 100);
     }
-    // Không cần removeAllBalloons nữa, vì CSS sẽ fade out
   } else {
-    // BAN ĐÊM
     rocket.style.display = "none";
     if (rocketDestroyed && !document.querySelector(".black-balloon")) {
       createBlackBalloon();
@@ -292,14 +273,10 @@ toggle.addEventListener("touchstart", () => {
   }
 });
 
-
-// Load
+// ====== LOAD ======
 window.onload = startRocket;
 
 document.addEventListener("gameEnded", () => {
   showDestroyMessage();
   createBlackBalloon();
-  
-  
-  // hoặc logic khác
 });
