@@ -1,4 +1,10 @@
+import { hudoa } from './jumpscare.js';
+
+// import { tenlua } from "./launch.js";
+
+
 // ===== STYLE LOCK =====
+const body = document.body; // thêm dòng này ở đây
 const style = document.createElement("style");
 style.textContent = `
 body {
@@ -43,7 +49,7 @@ body {
 
 
 #canvas{
-    position:absolute;
+    position:fixed;
     top:0;
     left:0;
     width:100%;
@@ -273,16 +279,28 @@ function checkPass(){
         successMsg.className = "success-message";
         successMsg.textContent = "Mở khóa thành công!";
         document.body.appendChild(successMsg);
+        // document.body.style.background = "none";
 
         // Sau hiệu ứng thì fade-out
         setTimeout(()=>{
             lockScreen.classList.add("fade-out");
             setTimeout(()=>{
                 lockScreen.style.display = "none";
-                if(canvas){
-                    canvas.classList.add("showCanvas");
-                }
-                window.location.href = "part2.html";
+                if (canvas) {
+                // đảm bảo canvas phủ toàn màn hình
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    canvas.style.display = "block"; 
+                    canvas.style.zIndex = "9999";   // phủ lên trên cùng
+                } 
+
+                
+                body.innerHTML = "";
+
+                hudoa();
+                // phaohoa()
+
+                // tenlua();
             },800);
         },1000);
     }
