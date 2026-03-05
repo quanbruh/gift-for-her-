@@ -62,7 +62,7 @@ function guess() {
     #quiz-overlay .image img {
       max-width: 100%;
       height: auto;
-      border: 2px solid #cccccc;
+      border: 2px solid #ccc;
       border-radius: 8px;
       visibility: hidden;
     }
@@ -83,6 +83,19 @@ function guess() {
       transition: opacity 1s ease;
     }
 
+    #quiz-overlay .send {
+    padding: 8px 16px;
+    margin-left: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #27ae60;
+    color: white;
+    } 
+
+
+
     #quiz-overlay .message {
       margin-top: 20px;
       font-weight: bold;
@@ -93,36 +106,18 @@ function guess() {
     #quiz-overlay .message.fade { opacity: 0; }
 
     @media (max-width: 768px) {
-    #quiz-overlay {
-      display: flex;
-      flex-direction: column;          /* xếp ngang */
-      overflow-x: scroll;           /* cho phép cuộn ngang */
-      scroll-snap-type: x mandatory;/* cuộn dừng từng trang */
-      -webkit-overflow-scrolling: touch; /* cuộn mượt trên iOS */
-      width: 100vw;                 /* đúng chiều rộng màn hình */
-      height: 100vh;                /* đúng chiều cao màn hình */
-    }
-
-    #quiz-overlay .quiz,
-    #quiz-overlay .image {
-      flex: 0 0 100%;               /* mỗi phần chiếm đúng 1 màn hình */
-      max-width: 100%;
-      height: 100%;                 /* chiếm toàn bộ chiều cao */
-      scroll-snap-align: start;     /* khi cuộn dừng đúng vị trí */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    #quiz-overlay .image img {
-      max-width: 70%;               /* ảnh nhỏ hơn */
-      height: auto;
-    }
-  }
-
-
-
-      
+      #quiz-overlay {
+        flex-direction: column;
+        align-items: center;
+      }
+      #quiz-overlay .quiz, #quiz-overlay .image {
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
+      }
+      #quiz-overlay .image {
+        justify-content: center;
+      }
       #quiz-overlay button {
         margin: 5px;
         width: 80%;
@@ -140,10 +135,9 @@ function guess() {
     <div class="quiz">
       <h2 id="question-title">Câu đố:</h2>
       <p id="question-text"></p>
-      <div class="buttons">
-        <button class="yes">Có</button>
-        <button class="no">Không</button>
-      </div>
+      <input id="answer-input" type="text" placeholder="Nhập câu trả lời...">
+      <button class="send">Gửi</button>
+
       <div class="message" id="message"></div>
       <button class="duoi">Dỗi</button>
     </div>
@@ -155,20 +149,23 @@ function guess() {
   `;
 
   // JS logic
-  const yesBtn = overlayContainer.querySelector('.yes');
-  const noBtn = overlayContainer.querySelector('.no');
+  const sendBtn = overlayContainer.querySelector('.send');
+
+  const inputBox = overlayContainer.querySelector('#answer-input');
   const duoiBtn = overlayContainer.querySelector('.duoi');
   const overlay = overlayContainer.querySelector('.overlay');
   const message = overlayContainer.querySelector('#message');
   const questionText = overlayContainer.querySelector('#question-text');
   const quizImage = overlayContainer.querySelector('#quiz-image');
+  sendBtn.addEventListener('click', checkAnswer);
+
 
   const quizData = [
-    {question: "Tôi có mặt khắp nơi, nhưng bạn không thể nhìn thấy tôi. Tôi là gì?", image: "image1.jpg"},
-    {question: "Cái gì càng lau càng ướt?", image: "image2.jpg"},
-    {question: "Con gì đập thì sống, không đập thì chết?", image: "image3.jpg"},
-    {question: "Con gì đập thì sống, không đập thì chết?", image: "image4.jpg"},
-    {question: "Con gì đập thì sống, không đập thì chết?", image: "image5.jpg"}
+    {question: "Tôi có mặt khắp nơi, nhưng bạn không thể nhìn thấy tôi. Tôi là gì?", image: "image1.jpg", answer:"hà mã"},
+    {question: "Cái gì càng lau càng ướt?", image: "image2.jpg", answer:"ngựa "},
+    {question: "Con gì đập thì sống, không đập thì chết?", image: "image3.jpg", answer:"hà mã"},
+    {question: "Con gì đập thì sống, không đập thì chết?", image: "image4.jpg", answer:"hà mã"},
+    {question: "Con gì đập thì sống, không đập thì chết?", image: "image5.jpg", answer:"hà mã"}
   ];
 
   let currentIndex = 0;
@@ -186,10 +183,11 @@ function guess() {
     quizImage.src = quizData[index].image;
 
     const positions = [
-      {top: "0", left: "0", right: "auto", bottom: "auto", width: "45%", height: "65%"},
-      {top: "0", right: "0", left: "auto", bottom: "auto", width: "50%", height: "100%"},
-      {bottom: "0", left: "0", top: "auto", right: "auto", width: "100%", height: "50%"},
-      {bottom: "0", right: "0", top: "auto", left: "auto", width: "70%", height: "70%"}
+      {top: "10%", left: "50%", right: "0", bottom: "0", width: "45%", height: "65%"},
+      {top: "18%", left: "33%", right: "0", bottom: "0", width: "20%", height: "25%"},
+      {top: "7%", left: "17%", right: "0", bottom: "0", width: "45%", height: "45%"},
+      {top: "25%", left: "10%", right: "0", bottom: "0", width: "30%", height: "38%"},
+      {top: "7%", left: "10%", right: "0", bottom: "0", width: "40%", height: "45%"}
     ];
     const pos = positions[index % positions.length];
     Object.assign(overlay.style, pos);
@@ -201,28 +199,59 @@ function guess() {
     overlayContainer.remove(); // Xóa overlay, game cũ hiện lại
   }
 
-  function handleAnswer(answerText) {
-    message.textContent = answerText;
+  let ketthuc = false;
+
+  function checkAnswer() {
+    const userAnswer = inputBox.value.trim().toLowerCase();
+    const correctAnswer = quizData[currentIndex].answer.toLowerCase();
+
+    if (userAnswer === "") {
+      message.textContent = "Nhập đáp án!";
+      return; // dừng lại, không kiểm tra tiếp
+    }
+
+    if (userAnswer === correctAnswer) {
+      message.textContent = "Đúng rồi!";
+    } else {
+      message.textContent = "Sai rồi gà quá!";
+    }
+
+    inputBox.value = "";
+
     overlay.classList.add('hidden');
     setTimeout(() => {
       message.classList.add('fade');
       setTimeout(() => {
         currentIndex++;
-        if (currentIndex < quizData.length) {
+        if (currentIndex < 1) {  //quizData.length
           loadQuiz(currentIndex);
         } else {
           message.textContent = "Hết câu hỏi!";
           message.classList.remove('fade');
-          setTimeout(endQuiz, 2000); // Xóa overlay sau 2s
+          ketthuc = true;
+          // setTimeout(endQuiz, 2000); // Xóa overlay sau 2s
         }
       }, 1000);
     }, 2000);
+
   }
 
-  yesBtn.addEventListener('click', () => handleAnswer("Bạn đã chọn Có!"));
-  noBtn.addEventListener('click', () => handleAnswer("Bạn đã chọn Không!"));
+
+  
+
+  
   duoiBtn.addEventListener('click', () => {
     message.textContent = "Ai cho cô dỗi hahaha";
     message.classList.remove('fade');
+    if(ketthuc){
+      error();
+    }
   });
+
+  document.addEventListener("error_end", () => {
+    setTimeout(endQuiz, 2000);
+  });
+
+
+
 }
