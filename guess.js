@@ -223,7 +223,7 @@ function guess() {
       message.classList.add('fade');
       setTimeout(() => {
         currentIndex++;
-        if (currentIndex < 1) {  //quizData.length
+        if (currentIndex < quizData.length) {  //quizData.length
           loadQuiz(currentIndex);
         } else {
           message.textContent = "Hết câu hỏi!";
