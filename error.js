@@ -26,7 +26,7 @@ function error(){
     }
     #bigError{
       position:absolute;
-      font-size:200px;
+      font-size:100px;
       font-weight:bold;
       color:red;
       opacity:0;

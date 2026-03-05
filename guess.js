@@ -244,6 +244,7 @@ function guess() {
     message.textContent = "Ai cho cô dỗi hahaha";
     message.classList.remove('fade');
     if(ketthuc){
+      message.textContent = "🐸";
       error();
     }
   });
