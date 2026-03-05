@@ -1,4 +1,4 @@
-import { hudoa } from './jumpscare.js';
+// import { hudoa } from './jumpscare.js';
 
 // import { tenlua } from "./launch.js";
 
@@ -296,10 +296,10 @@ function checkPass(){
                 
                 body.innerHTML = "";
 
-                hudoa();
-                // phaohoa()
+                // hudoa();
+                
 
-                // tenlua();
+                
             },800);
         },1000);
     }
@@ -316,7 +316,8 @@ function checkPass(){
         }
 
         if(failCount == 1){
-            quandeptrai();
+            // quandeptrai();
+            guess();
         }
         
 
