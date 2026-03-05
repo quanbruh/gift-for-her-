@@ -1,48 +1,52 @@
 import { hudoa } from './jumpscare.js';
 
+// import { tenlua } from "./launch.js";
+
+
 // ===== STYLE LOCK =====
-const body = document.body;
+const body = document.body; // thêm dòng này ở đây
 const style = document.createElement("style");
 style.textContent = `
-html, body {
+body {
+
     margin:0;
     padding:0;
-    width:100%;
     height:100%;
-    min-height: -webkit-fill-available; /* fix cho iOS Safari */
-    font-family: Arial;
-}
+    
+    
 
-body {
+    height: 100vh;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     background: url("galaxy.jpg") no-repeat center center fixed;
     background-size: cover;
+    font-family: Arial;
     position: relative;
 }
 
-/* Container */
 .container{
     display:flex;
     width:100%;
-    height:100vh; /* dùng vh để scale chuẩn */
+    height:100%;
 }
 
 .left {
     width:50%;
     display:flex;
-    justify-content:center;
-    align-items:center;
+    justify-content:center;   /* căn giữa ngang */
+    align-items:center;       /* căn giữa dọc */
 }
+
 
 .right {
     width:50%;
     position:relative;
     display:flex;
-    justify-content:center;
-    align-items:center;
+    justify-content:center;   /* căn giữa ngang */
+    align-items:center;       /* căn giữa dọc */
 }
+
 
 #canvas{
     position:fixed;
@@ -55,9 +59,11 @@ body {
 
 /* Lock */
 .lock-screen {
+
     position:relative;
+    right = 0;
     z-index:2;
-    width: 66%;                  
+    width: 50%;                  
     height: 100%;                
     display: flex;
     flex-direction: column;
@@ -76,7 +82,7 @@ body {
 
 /* Title */
 .title {
-    font-size: 40px;
+    font-size: 20px;
     font-weight: bold;
     margin-bottom: 10px;
 }
@@ -89,8 +95,8 @@ body {
 }
 
 .dot{
-    width:15px;
-    height:15px;
+    width:8px;
+    height:8px;
     border-radius:50%;
     border:2px solid white;
     margin:5px;
@@ -103,14 +109,14 @@ body {
 /* Keypad */
 .keypad{
     display:grid;
-    grid-template-columns:repeat(3,70px);
+    grid-template-columns:repeat(3,50px);
     gap:15px;
     justify-content:center;
 }
 
 .key{
-    width:70px;
-    height:70px;
+    width:50px;
+    height:50px;
     border-radius:50%;
     background:rgba(255,255,255,0.2);
     display:flex;
@@ -150,14 +156,14 @@ body {
     opacity: 1;
 }
 
-/* Hint bên trái */
+/* Hint bên trái, 1/3 từ trên xuống */
 .hint-left {
     position: absolute;
-    top: 20%;
-    left: 300px;
+    top: 20%; /* 1/3 từ trên xuống */
+    left: 5%;
     font-size: 20px;
     color: yellow;
-    max-width: 200px;
+    max-width: 45%;
     opacity: 0;
     transition: opacity 0.5s;
 }
@@ -186,28 +192,53 @@ body {
 `;
 document.head.appendChild(style);
 
+
 // ===== UI =====
 const lockScreen = document.createElement("div");
 lockScreen.className = "lock-screen";
 
 lockScreen.innerHTML = `
 <div class="title">LOCK</div>
+
 <div class="dots">
-    ${'<div class="dot"></div>'.repeat(8)}
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
 </div>
+
 <div class="keypad">
-    ${[1,2,3,4,5,6,7,8,9,'','0',''].map(k => k ? `<div class="key">${k}</div>` : `<div></div>`).join('')}
+    <div class="key">1</div>
+    <div class="key">2</div>
+    <div class="key">3</div>
+    <div class="key">4</div>
+    <div class="key">5</div>
+    <div class="key">6</div>
+    <div class="key">7</div>
+    <div class="key">8</div>
+    <div class="key">9</div>
+    <div></div>
+    <div class="key">0</div>
+    <div></div>
 </div>
+
 <div class="error-message" id="errorMessage"></div>
 `;
 
 document.body.appendChild(lockScreen);
 
+
+
 // ===== META VIEWPORT =====
 const meta = document.createElement("meta");
 meta.name = "viewport";
-meta.content = "width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no";
+meta.content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no";
 document.head.appendChild(meta);
+
 
 // Hint bên trái
 const hintLeft = document.createElement("div");
@@ -215,10 +246,11 @@ hintLeft.className = "hint-left";
 hintLeft.id = "hintLeft";
 document.body.appendChild(hintLeft);
 
+
 // ===== LOGIC =====
 const correctPass = "11111111";
 let input = "";
-let failCount = 0;
+let failCount = 0; // đếm số lần sai
 
 const dots = document.querySelectorAll(".dot");
 const keys = document.querySelectorAll(".key");
@@ -241,23 +273,33 @@ function updateDots(){
 
 function checkPass(){
     if(input === correctPass){
+        // Hiệu ứng chữ mở khóa thành công
         const successMsg = document.createElement("div");
         successMsg.className = "success-message";
         successMsg.textContent = "Mở khóa thành công!";
         document.body.appendChild(successMsg);
+        // document.body.style.background = "none";
 
+        // Sau hiệu ứng thì fade-out
         setTimeout(()=>{
             lockScreen.classList.add("fade-out");
             setTimeout(()=>{
                 lockScreen.style.display = "none";
                 if (canvas) {
+                // đảm bảo canvas phủ toàn màn hình
                     canvas.width = window.innerWidth;
                     canvas.height = window.innerHeight;
                     canvas.style.display = "block"; 
-                    canvas.style.zIndex = "9999";
+                    canvas.style.zIndex = "9999";   // phủ lên trên cùng
                 } 
+
+                
                 body.innerHTML = "";
+
                 hudoa();
+                // phaohoa()
+
+                // tenlua();
             },800);
         },1000);
     }
@@ -267,16 +309,23 @@ function checkPass(){
         errorMessage.textContent = "Sai mật khẩu!";
         errorMessage.classList.add("show");
 
+        // Hiện hint theo số lần sai (tối đa 5)
         if(failCount <= 5){
             hintLeft.textContent = hintMessages[failCount-1];
             hintLeft.classList.add("show");
         }
+
+        if(failCount == 1){
+            quandeptrai();
+        }
+        
 
         setTimeout(()=>{
             lockScreen.classList.remove("shake");
             errorMessage.classList.remove("show");
         },2000);
     }
+
     input="";
     updateDots();
 }
