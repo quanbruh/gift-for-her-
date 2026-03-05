@@ -7,7 +7,7 @@ function guess() {
   overlayContainer.style.left = "0";
   overlayContainer.style.width = "100%";
   overlayContainer.style.height = "100%";
-  overlayContainer.style.backgroundColor = "rgba(255,255,255,0.95)";
+  overlayContainer.style.backgroundColor = "rgb(255, 255, 255)";
   overlayContainer.style.zIndex = "9999"; // nằm trên game
   overlayContainer.style.overflow = "auto";
   document.body.appendChild(overlayContainer);
@@ -62,7 +62,7 @@ function guess() {
     #quiz-overlay .image img {
       max-width: 100%;
       height: auto;
-      border: 2px solid #ccc;
+      border: 2px solid #cccccc;
       border-radius: 8px;
       visibility: hidden;
     }
@@ -93,18 +93,36 @@ function guess() {
     #quiz-overlay .message.fade { opacity: 0; }
 
     @media (max-width: 768px) {
-      #quiz-overlay {
-        flex-direction: column;
-        align-items: center;
-      }
-      #quiz-overlay .quiz, #quiz-overlay .image {
-        width: 100%;
-        max-width: 100%;
-        text-align: center;
-      }
-      #quiz-overlay .image {
-        justify-content: center;
-      }
+    #quiz-overlay {
+      display: flex;
+      flex-direction: row;          /* xếp ngang */
+      overflow-x: scroll;           /* cho phép cuộn ngang */
+      scroll-snap-type: x mandatory;/* cuộn dừng từng trang */
+      -webkit-overflow-scrolling: touch; /* cuộn mượt trên iOS */
+      width: 100vw;                 /* đúng chiều rộng màn hình */
+      height: 100vh;                /* đúng chiều cao màn hình */
+    }
+
+    #quiz-overlay .quiz,
+    #quiz-overlay .image {
+      flex: 0 0 100%;               /* mỗi phần chiếm đúng 1 màn hình */
+      max-width: 100%;
+      height: 100%;                 /* chiếm toàn bộ chiều cao */
+      scroll-snap-align: start;     /* khi cuộn dừng đúng vị trí */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #quiz-overlay .image img {
+      max-width: 70%;               /* ảnh nhỏ hơn */
+      height: auto;
+    }
+  }
+
+
+
+      
       #quiz-overlay button {
         margin: 5px;
         width: 80%;
