@@ -2,8 +2,6 @@ import { galaxy } from './galaxy.js';
 
 export function tenlua(){
 
-  // ====== TẠO STYLE ======
-
   const style = document.createElement("style");
   style.textContent = `
   body {
@@ -13,22 +11,21 @@ export function tenlua(){
     overflow: hidden;
   }
 
-  /* Ban ngày */
   body.day {
     background: linear-gradient(to top, #ff9966, #ff5e62);
   }
-
-  /* Ban đêm */
   body.night {
     background: linear-gradient(to top, #0d1b2a, #1b263b);
   }
 
   .toggle-btn {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 80px;
-    height: 40px;
+    bottom: 2vh;
+    right: 2vh;
+    width: 20vw;
+    max-width: 80px;
+    height: 10vw;
+    max-height: 40px;
     border-radius: 20px;
     background: #ccc;
     cursor: pointer;
@@ -37,51 +34,54 @@ export function tenlua(){
     justify-content: center;
     transition: background 0.5s ease;
     z-index: 9999;
+    font-size: 4vw;
+    max-font-size: 18px;
   }
 
   .sun {
     position: absolute;
-    top: 100px;
+    top: 15vh;
     left: 50%;
     transform: translateX(-50%);
-    width: 100px;
-    height: 100px;
+    width: 20vw;
+    height: 20vw;
+    max-width: 100px;
+    max-height: 100px;
     border-radius: 50%;
     background: orange;
     box-shadow: 0 0 50px rgba(255,140,0,0.8);
     opacity: 1;
     transition: opacity 1s ease;
   }
-
-  body.night .sun {
-    opacity: 0;
-  }
+  body.night .sun { opacity: 0; }
 
   .rocket {
     position: absolute;
     top: 50%;
-    left: -120px;
+    left: -20vw;
     transform: translateY(-50%);
-    width: 60px;
-    height: 30px;
+    width: 15vw;
+    max-width: 60px;
+    height: 7vw;
+    max-height: 30px;
     background: silver;
     border-radius: 10px;
     transition: left 5s linear;
     cursor: pointer;
   }
-
   .rocket::after {
     content: '';
     position: absolute;
-    right: -15px;
-    top: 8px;
-    width: 15px;
-    height: 14px;
+    right: -4vw;
+    top: 2vw;
+    width: 4vw;
+    height: 3.5vw;
+    max-width: 15px;
+    max-height: 14px;
     background: red;
     border-radius: 50%;
     animation: flame 0.3s infinite alternate;
   }
-
   @keyframes flame {
     from { transform: scale(1); opacity: 1; }
     to { transform: scale(1.3); opacity: 0.6; }
@@ -89,26 +89,26 @@ export function tenlua(){
 
   .moon {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 15vw;
+    height: 15vw;
+    max-width: 60px;
+    max-height: 60px;
     border-radius: 50%;
     background: #f0f0f0;
     box-shadow: 0 0 20px white;
-    top: -100px;
+    top: -20vh;
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
     transition: top 1.5s ease, opacity 1.5s ease;
   }
-
-  body.night .moon {
-    top: 120px;
-    opacity: 1;
-  }
+  body.night .moon { top: 15vh; opacity: 1; }
 
   .black-balloon {
-    width: 100px;
-    height: 120px;
+    width: 25vw;
+    height: 30vw;
+    max-width: 100px;
+    max-height: 120px;
     border-radius: 50%;
     position: absolute;
     z-index: 20;
@@ -117,14 +117,7 @@ export function tenlua(){
     background: black;
     opacity: 0;
   }
-
-  body.day .black-balloon {
-    opacity: 0;
-  }
-
-  body.night .black-balloon {
-    opacity: 1;
-  }
+  body.night .black-balloon { opacity: 1; }
 
   .stars {
     position: absolute;
@@ -134,24 +127,21 @@ export function tenlua(){
     opacity: 0;
     transition: opacity 1.5s ease;
   }
-
   .star {
     position: absolute;
-    width: 4px;
-    height: 4px;
+    width: 1vw;
+    height: 1vw;
+    max-width: 4px;
+    max-height: 4px;
     background: white;
     border-radius: 50%;
     animation: twinkle 2s infinite alternate;
   }
-
   @keyframes twinkle {
     from { opacity: 0.3; }
     to { opacity: 1; }
   }
-
-  body.night .stars {
-    opacity: 1;
-  }
+  body.night .stars { opacity: 1; }
   `;
   document.head.appendChild(style);
 
@@ -160,16 +150,12 @@ export function tenlua(){
 
   const sun = document.createElement("div");
   sun.className = "sun";
-
   const rocket = document.createElement("div");
   rocket.className = "rocket";
-
   const moon = document.createElement("div");
   moon.className = "moon";
-
   const starsContainer = document.createElement("div");
   starsContainer.className = "stars";
-
   const toggle = document.createElement("div");
   toggle.className = "toggle-btn";
   toggle.innerText = "☀️/🌙";
@@ -194,7 +180,6 @@ export function tenlua(){
     rocket.style.left = window.innerWidth + "px";
   }
 
-  // ====== HÀM TƯƠNG TÁC CHUNG ======
   function addInteraction(el, handler) {
     el.addEventListener("click", handler);
     el.addEventListener("touchstart", handler);
@@ -223,7 +208,6 @@ export function tenlua(){
     });
   }
 
-  // ====== HIỂN THỊ CHỮ ======
   function showDestroyMessage() {
     const msg = document.createElement("div");
     msg.textContent = "Phá huỷ bóng bay";
@@ -231,7 +215,8 @@ export function tenlua(){
     msg.style.top = "50%";
     msg.style.left = "50%";
     msg.style.transform = "translate(-50%, -50%)";
-    msg.style.fontSize = "48px";
+    msg.style.fontSize = "8vw";
+    msg.style.maxFontSize = "48px";
     msg.style.fontWeight = "bold";
     msg.style.color = "white";
     msg.style.textShadow = "2px 2px 8px black";
@@ -249,7 +234,6 @@ export function tenlua(){
 
   let rocketDestroyed = false;
 
-  // ====== TƯƠNG TÁC TÊN LỬA ======
   addInteraction(rocket, () => {
     rocket.style.display = "none";
     rocketDestroyed = true;
@@ -257,7 +241,6 @@ export function tenlua(){
     bongbay();
   });
 
-  // ====== TOGGLE NGÀY/ĐÊM ======
   addInteraction(toggle, () => {
     document.body.classList.toggle("night");
     document.body.classList.toggle("day");
@@ -265,9 +248,11 @@ export function tenlua(){
     if (document.body.classList.contains("day")) {
       if (!rocketDestroyed) {
         rocket.style.display = "block";
-        rocket.style.left = "-120px";
+        rocket.style.left = "-20vw";
         setTimeout(startRocket, 100);
       }
+    
+
     } else {
       rocket.style.display = "none";
       if (rocketDestroyed && !document.querySelector(".black-balloon")) {

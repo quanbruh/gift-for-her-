@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Messenger + Lock + Firework</title>
+
+<style>* {
+  box-sizing: border-box;
+}
+:root {
+  --depth: 5vmin;
+  --on: 0;
+  --size: 25vmin;
+  --bg: hsl(calc(200 - (var(--on) * 160)), calc((20 + (var(--on) * 50)) * 1%), calc((20 + (var(--on) * 60)) * 1%));
+  --cord: hsl(0, 0%, calc((60 - (var(--on) * 50)) * 1%));
+  --stroke: hsl(0, 0%, calc((60 - (var(--on) * 50)) * 1%));
+  --shine: hsla(0, 0%, 100%, calc(0.75 - (var(--on) * 0.5)));
+  --cap: hsl(0, 0%, calc((40 + (var(--on) * 30)) * 1%));
+  --filament: hsl(45, calc(var(--on) * 80%), calc((25 + (var(--on) * 75)) * 1%));
+  
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  overflow: hidden;
+}
+label {
+  position: absolute;
+  opacity: 0.5;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+input {
+  height: 0;
+  width: 0;
+  position: fixed;
+  left: 100%;
+  transform: scale(0);
+}
+.toggle {
+  height: var(--size);
+  width: var(--size);
+  transform: translate(-50%, -100%);
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -100%, calc(var(--depth) * 3));
+}
+.toggle-scene {
+  overflow: visible !important;
+  width: 100%;
+  position: absolute;
+}
+.toggle-scene__arm {
+  display: none;
+}
+.toggle-scene__cord {
+  stroke: var(--cord);
+  cursor: move;
+}
+.toggle-scene__cord:nth-of-type(1) {
+  display: none;
+}
+.toggle-scene__cord:nth-of-type(2),
+.toggle-scene__cord:nth-of-type(3),
+.toggle-scene__cord:nth-of-type(4),
+.toggle-scene__cord:nth-of-type(5) {
+  display: none;
+}
+.toggle-scene__cord-end {
+  stroke: var(--cord);
+  fill: var(--cord);
+}
+.toggle-scene__dummy-cord {
+  stroke-width: 6;
+  stroke: var(--cord);
+}
+.bulb__filament {
+  stroke: var(--filament);
+}
+.bulb__shine {
+  stroke: var(--shine);
+}
+.bulb__flash {
+  stroke: #f5e0a3;
+  display: none;
+}
+.bulb__bulb {
+  stroke: var(--stroke);
+  fill: hsla(calc(180 - (95 * var(--on))), 80%, 80%, calc(0.1 + (0.4 * var(--on))));
+}
+.bulb__cap {
+  fill: var(--cap);
+}
+.bulb__cap-shine {
+  fill: var(--shine);
+}
+.bulb__cap-outline {
+  stroke: var(--stroke);
+}
+.bear {
+  display: none;
+}
+.bear__fur {
+  fill: #784421;
+}
+.bear__pad {
+  fill: #deaa87;
+}
+.doorway {
+  position: absolute;
+  top: 50%;
+  height: calc(var(--size) * 4);
+  width: calc(var(--size) * 1.5);
+  transform: translate(0, calc(var(--size) * -0.75));
+  left: calc(50% + (var(--size) * 0.5));
+  -webkit-clip-path: inset(0 0 0 -200%);
+  clip-path: inset(0 0 0 -200%);
+}
+.doorway__opening {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background: #1a1a1a;
+  transform: translate3d(0, 0, calc(var(--depth) * -1));
+}
+.bear {
+  position: absolute;
+  top: 10%;
+  width: var(--size);
+}
+.door {
+  --panel: hsl(30, 20%, calc(12% + (var(--on) * 40%)));
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  transform-origin: 100% 50%;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+}
+.door__panel {
+  width: 30%;
+  height: 35%;
+  position: absolute;
+  border: 1vmin var(--panel) solid;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translate(var(--x), var(--y));
+}
+.door__panel:nth-of-type(1) {
+  --x: -70%;
+  --y: -70%;
+}
+.door__panel:nth-of-type(2) {
+  --x: 70%;
+  --y: -70%;
+}
+.door__panel:nth-of-type(3) {
+  --x: -70%;
+  --y: 70%;
+}
+.door__panel:nth-of-type(4) {
+  --x: 70%;
+  --y: 70%;
+}
+.door__handle {
+  height: 4vmin;
+  width: 4vmin;
+  position: absolute;
+  left: 10%;
+  top: 50%;
+  transform: translate3d(0, -50%, 1vmin);
+}
+.door__handle > div {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: hsl(45, 70%, calc((var(--lightness, 20%)) + (var(--on) * 40%)));
+}
+.door__handle > div:nth-of-type(1) {
+  --lightness: 25%;
+}
+.door__handle > div:nth-of-type(2) {
+  --lightness: 30%;
+  transform: translate3d(0, 0, calc(var(--depth) * 1));
+}
+.door__side {
+  position: absolute;
+}
+.door__side:nth-of-type(1) {
+  --lightness: 20%;
+  height: 100%;
+  width: 100%;
+  transform: translate3d(0, 0, 0);
+  z-index: 3;
+  background-color: hsl(30, 20%, calc((var(--lightness, 20%)) + (var(--on) * 40%)));
+}
+.door__side:nth-of-type(2) {
+  --lightness: 10%;
+  height: 100%;
+  width: 100%;
+  transform: translate3d(0, 0, calc(var(--depth) * -1));
+}
+.door__side {
+  background-color: hsl(30, 20%, calc((var(--lightness, 20%)) + (var(--on) * 40%)));
+}
+
+
+/* Chữ bên trái màn hình */
+
+}
+
+</style>
+</head>
+<body>
+
+
+
+<div class="toggle">
+  <input id="light-mode" type="checkbox"/>
+  <svg class="toggle-scene" xmlns="http://www.w3.org/2000/svg" preserveaspectratio="xMinYMin" viewBox="0 0 197.451 581.081">
+    <defs>
+      <marker id="e" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666" d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <marker id="d" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666" d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <marker id="c" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666" d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <marker id="b" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666" d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <marker id="a" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666" d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <clippath id="scene" clippathunit="userSpaceOnUse">
+        <rect x="0" y="0" width="208.5" height="581.081"></rect>
+      </clippath>
+      <clippath id="g" clippathunits="userSpaceOnUse">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4.677" d="M-774.546 827.629s12.917-13.473 29.203-13.412c16.53.062 29.203 13.412 29.203 13.412v53.6s-8.825 16-29.203 16c-21.674 0-29.203-16-29.203-16z"></path>
+      </clippath>
+      <clippath id="knuckles" clippathunits="userSpaceOnUse">
+        <path d="M-868.418 945.051c-4.188 73.011 78.255 53.244 150.216 52.941 82.387-.346 98.921-19.444 98.921-47.058 0-27.615-4.788-42.55-73.823-42.55-69.036 0-171.436-30.937-175.314 36.667z"></path>
+      </clippath>
+    </defs>
+    <g clip-path="url(#scene)">
+      <g class="toggle-scene__arm toggle-scene__arm--main bear__arm bear__arm--back">
+        <g transform="translate(905.657 -597.025)" clip-path="url(#knuckles)">
+          <path class="bear__fur" d="M-868.418 945.051c-4.188 73.011 78.255 53.244 150.216 52.941 82.387-.346 98.921-19.444 98.921-47.058 0-27.615-4.788-42.55-73.823-42.55-69.036 0-171.436-30.937-175.314 36.667z"></path>
+          <ellipse class="bear__pad" cx="804.83" cy="950.986" rx="29.911" ry="29.414" transform="scale(-1 1)"></ellipse>
+        </g>
+      </g>
+    </g>
+    <g class="toggle-scene__cords">
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6" d="M123.228-28.56v150.493" transform="translate(-24.503 256.106)"></path>
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6" d="M123.228-28.59s28 8.131 28 19.506-18.667 13.005-28 19.507c-9.333 6.502-28 8.131-28 19.506s28 19.507 28 19.507" transform="translate(-24.503 256.106)"></path>
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6" d="M123.228-28.575s-20 16.871-20 28.468c0 11.597 13.333 18.978 20 28.468 6.667 9.489 20 16.87 20 28.467 0 11.597-20 28.468-20 28.468" transform="translate(-24.503 256.106)"></path>
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6" d="M123.228-28.569s16 20.623 16 32.782c0 12.16-10.667 21.855-16 32.782-5.333 10.928-16 20.623-16 32.782 0 12.16 16 32.782 16 32.782" transform="translate(-24.503 256.106)"></path>
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6" d="M123.228-28.563s-10 24.647-10 37.623c0 12.977 6.667 25.082 10 37.623 3.333 12.541 10 24.647 10 37.623 0 12.977-10 37.623-10 37.623" transform="translate(-24.503 256.106)"></path>
+      <g class="line toggle-scene__dummy-cord">
+        <line marker-end="url(#a)" x1="98.7255" x2="98.7255" y1="250.5405" y2="380.5405"></line>
+      </g>
+      <circle class="toggle-scene__hit-spot" cx="98.7255" cy="380.5405" r="60" fill="transparent"></circle>
+    </g>
+    <g class="toggle-scene__bulb bulb" transform="translate(844.069 -645.213)">
+      <path class="bulb__cap" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.677" d="M-774.546 827.629s12.917-13.473 29.203-13.412c16.53.062 29.203 13.412 29.203 13.412v53.6s-8.825 16-29.203 16c-21.674 0-29.203-16-29.203-16z"></path>
+      <path class="bulb__cap-shine" d="M-778.379 802.873h25.512v118.409h-25.512z" clip-path="url(#g)" transform="matrix(.52452 0 0 .90177 -368.282 82.976)"></path>
+      <path class="bulb__cap" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M-774.546 827.629s12.917-13.473 29.203-13.412c16.53.062 29.203 13.412 29.203 13.412v0s-8.439 10.115-28.817 10.115c-21.673 0-29.59-10.115-29.59-10.115z"></path>
+      <path class="bulb__cap-outline" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.677" d="M-774.546 827.629s12.917-13.473 29.203-13.412c16.53.062 29.203 13.412 29.203 13.412v53.6s-8.825 16-29.203 16c-21.674 0-29.203-16-29.203-16z"></path>
+      <g class="bulb__filament" fill="none" stroke-linecap="round" stroke-width="5">
+        <path d="M-752.914 823.875l-8.858-33.06"></path>
+        <path d="M-737.772 823.875l8.858-33.06"></path>
+      </g>
+      <path class="bulb__bulb" stroke-linecap="round" stroke-width="5" d="M-783.192 803.855c5.251 8.815 5.295 21.32 13.272 27.774 12.299 8.045 36.46 8.115 49.127 0 7.976-6.454 8.022-18.96 13.273-27.774 3.992-6.7 14.408-19.811 14.408-19.811 8.276-11.539 12.769-24.594 12.769-38.699 0-35.898-29.102-65-65-65-35.899 0-65 29.102-65 65 0 13.667 4.217 26.348 12.405 38.2 0 0 10.754 13.61 14.746 20.31z"></path>
+      <circle class="bulb__flash" cx="-745.343" cy="743.939" r="83.725" fill="none" stroke-dasharray="10,30" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"></circle>
+      <path class="bulb__shine" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" d="M-789.19 757.501a45.897 45.897 0 013.915-36.189 45.897 45.897 0 0129.031-21.957"></path>
+    </g>
+    <g clip-path="url(#scene)">
+      <g class="toggle-scene__arm toggle-scene__arm--front bear__arm bear__arm--front">
+        <g transform="translate(905.657 -597.025)">
+          <path fill="transparent" d="M-868.418 945.051c-4.188 73.011 78.255 53.244 150.216 52.941 82.387-.346 98.921-19.444 98.921-47.058 0-27.615-4.788-42.55-73.823-42.55-69.036 0-171.436-30.937-175.314 36.667z"></path>
+          <ellipse cx="804.83" cy="950.986" fill="transparent" rx="29.911" ry="29.414" transform="scale(-1 1)"></ellipse>
+        </g>
+        <g clip-path="url(#knuckles)" transform="translate(905.657 -597.025)">
+          <path class="toggle-scene__paw bear__paw bear__fur" d="M-798.725 945.051c4.188 73.011-78.254 53.244-150.215 52.941-82.387-.346-98.922-19.444-98.922-47.058 0-27.615 4.788-42.55 73.824-42.55 69.035 0 171.436-30.937 175.313 36.667z"></path>
+        </g>
+      </g>
+    </g>
+  </svg>
+</div>
+<div class="doorway">
+  <div class="doorway__opening"></div>
+  <svg class="bear" viewBox="0 0 284.946 359.737">
+    <g transform="translate(-42.557 -974.222) scale(1.23353)">
+      <path class="bear__fur" d="M263.91 1081.415a113.968 96.863 0 00-113.919-95.7 113.968 96.863 0 00-113.9 95.7h227.818z"></path>
+      <path class="bear__fur" d="M250.428 903.362c0 66.271-44.754 114.995-102.428 114.995s-98.428-48.724-98.428-114.995c0-66.27 40.754-92.994 98.428-92.994s102.428 26.723 102.428 92.994z"></path>
+      <path d="M217 972.862c0 21.54-30.445 42-68 42s-66-20.46-66-42c0-21.539 28.445-36 66-36s68 14.461 68 36z" fill="#e9c6af"></path>
+      <path d="M181.5 944.362c0 8.284-20.6 26.5-32.75 26.5-12.15 0-34.75-18.216-34.75-26.5 0-8.284 22.6-13.5 34.75-13.5 12.15 0 32.75 5.216 32.75 13.5z"></path>
+      <ellipse class="bear__fur" cx="69" cy="823.073" rx="34.5" ry="33.289"></ellipse>
+      <path d="M69 799.673a24.25 23.4 0 00-24.25 23.4 24.25 23.4 0 0019.97 23.01c.277-.407.505-.868.788-1.268a71.11 71.11 0 0111.65-12.802 73.691 73.691 0 016.856-5.227 79.249 79.249 0 017.498-4.469c.54-.283 1.133-.5 1.681-.773A24.25 23.4 0 0069 799.673z" fill="#e9c6af"></path>
+      <g transform="matrix(-1 0 0 1 300 0)">
+        <ellipse class="bear__fur" ry="33.289" rx="34.5" cy="823.073" cx="69"></ellipse>
+        <path d="M69 799.673a24.25 23.4 0 00-24.25 23.4 24.25 23.4 0 0019.97 23.01c.277-.407.505-.868.788-1.268a71.11 71.11 0 0111.65-12.802 73.691 73.691 0 016.856-5.227 79.249 79.249 0 017.498-4.469c.54-.283 1.133-.5 1.681-.773A24.25 23.4 0 0069 799.673z" fill="#e9c6af"></path>
+      </g>
+      <ellipse ry="9.679" rx="9.27" cy="900.389" cx="105.831"></ellipse>
+      <ellipse cx="186.899" cy="900.389" rx="9.27" ry="9.679"></ellipse>
+      <path class="bear__brows" d="M92.058 865.461l39.427 22.763M202.825 865.461l-39.427 22.763" fill="none" stroke="#000" stroke-width="4.864" stroke-linecap="round" stroke-linejoin="round"></path>
+    </g>
+  </svg>
+  <div class="doorway__door door">
+    <div class="door__side">
+      <div class="door__panel"></div>
+      <div class="door__panel"></div>
+      <div class="door__panel"></div>
+      <div class="door__panel"></div>
+      <div class="door__handle">
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    <div class="door__side">
+    </div>
+  </div>
+</div>
+
+  <script src='https://unpkg.co/gsap@3/dist/gsap.min.js'></script>
+<script src='https://assets.codepen.io/16327/MorphSVGPlugin3.min.js'></script>
+<script src='https://unpkg.com/gsap@3/dist/Draggable.min.js'></script>
+
+<script>const {
+  gsap: {
+    registerPlugin,
+    set,
+    to,
+    timeline,
+    delayedCall,
+    utils: { random } },
+
+  MorphSVGPlugin,
+  Draggable } =
+window;
+registerPlugin(MorphSVGPlugin);
+
+// Used to calculate distance of "tug"
+let startX;
+let startY;
+
+const CORD_DURATION = 0.1;
+const INPUT = document.querySelector('#light-mode');
+const ARMS = document.querySelectorAll('.bear__arm');
+const PAW = document.querySelector('.bear__paw');
+const CORDS = document.querySelectorAll('.toggle-scene__cord');
+const HIT = document.querySelector('.toggle-scene__hit-spot');
+const DUMMY = document.querySelector('.toggle-scene__dummy-cord');
+const DUMMY_CORD = document.querySelector('.toggle-scene__dummy-cord line');
+const PROXY = document.createElement('div');
+const endY = DUMMY_CORD.getAttribute('y2');
+const endX = DUMMY_CORD.getAttribute('x2');
+// set init position
+const RESET = () => {
+  set(PROXY, {
+    x: endX,
+    y: endY });
+
+};
+
+const AUDIO = {
+  BEAR_LONG: new Audio('https://assets.codepen.io/605876/bear-groan-long.mp3'),
+  BEAR_SHORT: new Audio(
+  'https://assets.codepen.io/605876/bear-groan-short.mp3'),
+
+  DOOR_OPEN: new Audio('https://assets.codepen.io/605876/door-open.mp3'),
+  DOOR_CLOSE: new Audio('https://assets.codepen.io/605876/door-close.mp3'),
+  CLICK: new Audio('https://assets.codepen.io/605876/click.mp3') };
+
+const STATE = {
+  ON: false,
+  ANGER: 0 };
+
+set(PAW, {
+  transformOrigin: '50% 50%',
+  xPercent: -30 });
+
+set('.bulb', { z: 10 });
+set(ARMS, {
+  xPercent: 10,
+  rotation: -90,
+  transformOrigin: '100% 50%',
+  yPercent: -2,
+  display: 'block' });
+
+const CONFIG = {
+  ARM_DUR: 0.4,
+  CLENCH_DUR: 0.1,
+  BEAR_START: 40,
+  BEAR_FINISH: -55,
+  BEAR_ROTATE: -50,
+  DOOR_OPEN: 25,
+  INTRO_DELAY: 1,
+  BEAR_APPEARANCE: 2,
+  SLAM: 3,
+  BROWS: 4 };
+
+set('.bear__brows', { display: 'none' });
+set('.bear', {
+  rotate: CONFIG.BEAR_ROTATE,
+  xPercent: CONFIG.BEAR_START,
+  transformOrigin: '50% 50%',
+  scale: 0,
+  display: 'block' });
+
+
+RESET();
+
+const CORD_TL = () => {
+  const TL = timeline({
+    paused: false,
+    onStart: () => {
+      // Hook this up to localStorage for jhey.dev
+      STATE.ON = !STATE.ON;
+      INPUT.checked = !STATE.ON;
+      set(document.documentElement, { '--on': STATE.ON ? 1 : 0 });
+      set([DUMMY], { display: 'none' });
+      set(CORDS[0], { display: 'block' });
+      AUDIO.CLICK.play();
+    },
+    onComplete: () => {
+      // BEAR_TL.restart()
+      set([DUMMY], { display: 'block' });
+      set(CORDS[0], { display: 'none' });
+      RESET();
+    } });
+
+  for (let i = 1; i < CORDS.length; i++) {
+    TL.add(
+    to(CORDS[0], {
+      morphSVG: CORDS[i],
+      duration: CORD_DURATION,
+      repeat: 1,
+      yoyo: true }));
+
+
+  }
+  return TL;
+};
+
+/**
+ * Mess around with the actial input toggling here.
+ */
+const BEAR_TL = () => {
+  const ARM_SWING = STATE.ANGER > 4 ? 0.2 : CONFIG.ARM_DUR;
+  const SLIDE = STATE.ANGER > CONFIG.BROWS + 3 ? 0.2 : random(0.2, 0.6);
+  const CLOSE_DELAY = STATE.ANGER >= CONFIG.INTRO_DELAY ? random(0.2, 2) : 0;
+  const TL = timeline({
+    paused: false }).
+
+  to('.door', {
+    onStart: () => AUDIO.DOOR_OPEN.play(),
+    rotateY: 25,
+    duration: 0.2 }).
+
+  add(
+  STATE.ANGER >= CONFIG.BEAR_APPEARANCE && Math.random() > 0.25 ?
+  to('.bear', {
+    onStart: () => {
+      if (Math.random() > 0.5) {
+        // delayedCall(random(0, 1.5), () => {
+        //   AUDIO[
+        //     STATE.ANGER >= CONFIG.BROWS && Math.random() > 0.5
+        //       ? 'BEAR_LONG'
+        //       : 'BEAR_SHORT'
+        //   ].play()
+        // })
+      }
+      set('.bear', { scale: 1 });
+    },
+    xPercent: CONFIG.BEAR_FINISH,
+    repeat: 1,
+    repeatDelay: 1,
+    yoyo: true,
+    duration: SLIDE }) :
+
+  () => {}).
+
+  to(ARMS, {
+    delay: CLOSE_DELAY,
+    duration: ARM_SWING,
+    rotation: 0,
+    xPercent: 0,
+    yPercent: 0 }).
+
+  to(
+  [PAW, '#knuckles'],
+  {
+    duration: CONFIG.CLENCH_DUR,
+    xPercent: (_, target) => target.id === 'knuckles' ? 10 : 0 },
+
+  `>-${ARM_SWING * 0.5}`).
+
+  to(ARMS, {
+    duration: ARM_SWING * 0.5,
+    rotation: 5 }).
+
+  to(ARMS, {
+    rotation: -90,
+    xPercent: 10,
+    duration: ARM_SWING,
+    onComplete: () => {
+      to('.door', {
+        onComplete: () => AUDIO.DOOR_CLOSE.play(),
+        duration: 0.2,
+        rotateY: 0 });
+
+    } }).
+
+  to(
+  DUMMY_CORD,
+  {
+    duration: CONFIG.CLENCH_DUR,
+    attr: {
+      x2: parseInt(endX, 10) + 20,
+      y2: parseInt(endY, 10) + 60 } },
+
+
+  '<').
+
+  to(
+  DUMMY_CORD,
+  {
+    duration: CONFIG.CLENCH_DUR,
+    attr: {
+      x2: endX,
+      y2: endY } },
+
+
+  '>').
+
+  to(
+  [PAW, '#knuckles'],
+  {
+    duration: CONFIG.CLENCH_DUR,
+    xPercent: (_, target) => target.id === 'knuckles' ? 0 : -28 },
+
+  '<').
+
+  add(() => CORD_TL(), '<');
+  return TL;
+};
+
+const IMPOSSIBLE_TL = () =>
+timeline({
+  onStart: () => set(HIT, { display: 'none' }),
+  onComplete: () => {
+    set(HIT, { display: 'block' });
+    if (Math.random() > 0) STATE.ANGER = STATE.ANGER + 1;
+    if (STATE.ANGER >= CONFIG.BROWS) set('.bear__brows', { display: 'block' });
+  } }).
+
+add(CORD_TL()).
+add(BEAR_TL());
+
+Draggable.create(PROXY, {
+  trigger: HIT,
+  type: 'x,y',
+  onPress: e => {
+    startX = e.x;
+    startY = e.y;
+    RESET();
+  },
+  onDrag: function () {
+    set(DUMMY_CORD, {
+      attr: {
+        x2: this.x,
+        y2: this.y } });
+
+
+  },
+  onRelease: function (e) {
+    const DISTX = Math.abs(e.x - startX);
+    const DISTY = Math.abs(e.y - startY);
+    const TRAVELLED = Math.sqrt(DISTX * DISTX + DISTY * DISTY);
+    to(DUMMY_CORD, {
+      attr: { x2: endX, y2: endY },
+      duration: CORD_DURATION,
+      onComplete: () => {
+        if (TRAVELLED > 50) {
+          IMPOSSIBLE_TL();
+        } else {
+          RESET();
+        }
+      } });
+
+  } });</script>
+</body>
+</html>

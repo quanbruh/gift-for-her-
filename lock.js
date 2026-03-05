@@ -1,52 +1,48 @@
 import { hudoa } from './jumpscare.js';
 
-// import { tenlua } from "./launch.js";
-
-
 // ===== STYLE LOCK =====
-const body = document.body; // thêm dòng này ở đây
+const body = document.body;
 const style = document.createElement("style");
 style.textContent = `
-body {
-
+html, body {
     margin:0;
     padding:0;
+    width:100%;
     height:100%;
-    
-    
+    min-height: -webkit-fill-available; /* fix cho iOS Safari */
+    font-family: Arial;
+}
 
-    height: 100vh;
+body {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     background: url("galaxy.jpg") no-repeat center center fixed;
     background-size: cover;
-    font-family: Arial;
     position: relative;
 }
 
+/* Container */
 .container{
     display:flex;
     width:100%;
-    height:100%;
+    height:100vh; /* dùng vh để scale chuẩn */
 }
 
 .left {
     width:50%;
     display:flex;
-    justify-content:center;   /* căn giữa ngang */
-    align-items:center;       /* căn giữa dọc */
+    justify-content:center;
+    align-items:center;
 }
-
 
 .right {
     width:50%;
     position:relative;
     display:flex;
-    justify-content:center;   /* căn giữa ngang */
-    align-items:center;       /* căn giữa dọc */
+    justify-content:center;
+    align-items:center;
 }
-
 
 #canvas{
     position:fixed;
@@ -59,11 +55,8 @@ body {
 
 /* Lock */
 .lock-screen {
-
     position:relative;
     z-index:2;
-    
-
     width: 66%;                  
     height: 100%;                
     display: flex;
@@ -157,10 +150,10 @@ body {
     opacity: 1;
 }
 
-/* Hint bên trái, 1/3 từ trên xuống */
+/* Hint bên trái */
 .hint-left {
     position: absolute;
-    top: 20%; /* 1/3 từ trên xuống */
+    top: 20%;
     left: 300px;
     font-size: 20px;
     color: yellow;
@@ -193,53 +186,28 @@ body {
 `;
 document.head.appendChild(style);
 
-
 // ===== UI =====
 const lockScreen = document.createElement("div");
 lockScreen.className = "lock-screen";
 
 lockScreen.innerHTML = `
 <div class="title">LOCK</div>
-
 <div class="dots">
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
+    ${'<div class="dot"></div>'.repeat(8)}
 </div>
-
 <div class="keypad">
-    <div class="key">1</div>
-    <div class="key">2</div>
-    <div class="key">3</div>
-    <div class="key">4</div>
-    <div class="key">5</div>
-    <div class="key">6</div>
-    <div class="key">7</div>
-    <div class="key">8</div>
-    <div class="key">9</div>
-    <div></div>
-    <div class="key">0</div>
-    <div></div>
+    ${[1,2,3,4,5,6,7,8,9,'','0',''].map(k => k ? `<div class="key">${k}</div>` : `<div></div>`).join('')}
 </div>
-
 <div class="error-message" id="errorMessage"></div>
 `;
 
 document.body.appendChild(lockScreen);
 
-
-
 // ===== META VIEWPORT =====
 const meta = document.createElement("meta");
 meta.name = "viewport";
-meta.content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no";
+meta.content = "width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no";
 document.head.appendChild(meta);
-
 
 // Hint bên trái
 const hintLeft = document.createElement("div");
@@ -247,11 +215,10 @@ hintLeft.className = "hint-left";
 hintLeft.id = "hintLeft";
 document.body.appendChild(hintLeft);
 
-
 // ===== LOGIC =====
 const correctPass = "11111111";
 let input = "";
-let failCount = 0; // đếm số lần sai
+let failCount = 0;
 
 const dots = document.querySelectorAll(".dot");
 const keys = document.querySelectorAll(".key");
@@ -274,33 +241,23 @@ function updateDots(){
 
 function checkPass(){
     if(input === correctPass){
-        // Hiệu ứng chữ mở khóa thành công
         const successMsg = document.createElement("div");
         successMsg.className = "success-message";
         successMsg.textContent = "Mở khóa thành công!";
         document.body.appendChild(successMsg);
-        // document.body.style.background = "none";
 
-        // Sau hiệu ứng thì fade-out
         setTimeout(()=>{
             lockScreen.classList.add("fade-out");
             setTimeout(()=>{
                 lockScreen.style.display = "none";
                 if (canvas) {
-                // đảm bảo canvas phủ toàn màn hình
                     canvas.width = window.innerWidth;
                     canvas.height = window.innerHeight;
                     canvas.style.display = "block"; 
-                    canvas.style.zIndex = "9999";   // phủ lên trên cùng
+                    canvas.style.zIndex = "9999";
                 } 
-
-                
                 body.innerHTML = "";
-
                 hudoa();
-                // phaohoa()
-
-                // tenlua();
             },800);
         },1000);
     }
@@ -310,23 +267,16 @@ function checkPass(){
         errorMessage.textContent = "Sai mật khẩu!";
         errorMessage.classList.add("show");
 
-        // Hiện hint theo số lần sai (tối đa 5)
         if(failCount <= 5){
             hintLeft.textContent = hintMessages[failCount-1];
             hintLeft.classList.add("show");
         }
-
-        if(failCount == 1){
-            quandeptrai();
-        }
-        
 
         setTimeout(()=>{
             lockScreen.classList.remove("shake");
             errorMessage.classList.remove("show");
         },2000);
     }
-
     input="";
     updateDots();
 }

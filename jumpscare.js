@@ -20,8 +20,10 @@ export function hudoa() {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 200px;
-      height: 200px;
+      width: 40vw;   /* chiếm 40% chiều ngang màn hình */
+      height: 40vw;  /* giữ hình vuông */
+      max-width: 250px;  /* giới hạn tối đa trên màn hình lớn */
+      max-height: 250px;
       transform-style: preserve-3d;
       cursor: pointer;
       z-index: 1;
@@ -34,17 +36,17 @@ export function hudoa() {
     }
     .face {
       position: absolute;
-      width: 200px;
-      height: 200px;
+      width: 100%;
+      height: 100%;
       background: #ff4d4d;
       border: 2px solid #fff;
     }
-    .front  { transform: rotateY(0deg) translateZ(100px); }
-    .back   { transform: rotateY(180deg) translateZ(100px); }
-    .right  { transform: rotateY(90deg) translateZ(100px); }
-    .left   { transform: rotateY(-90deg) translateZ(100px); }
-    .top    { transform: rotateX(90deg) translateZ(100px); background: #ff9999; }
-    .bottom { transform: rotateX(-90deg) translateZ(100px); background: #ff9999; }
+    .front  { transform: rotateY(0deg) translateZ(50%); }
+    .back   { transform: rotateY(180deg) translateZ(50%); }
+    .right  { transform: rotateY(90deg) translateZ(50%); }
+    .left   { transform: rotateY(-90deg) translateZ(50%); }
+    .top    { transform: rotateX(90deg) translateZ(50%); background: #ff9999; }
+    .bottom { transform: rotateX(-90deg) translateZ(50%); background: #ff9999; }
     .overlay {
       position: fixed;
       top: 0; left: 0;
@@ -67,7 +69,7 @@ export function hudoa() {
       opacity: 0;
     }
     body.zoom {
-      transform: scale(3);
+      transform: scale(2.5); /* scale vừa phải cho mobile */
     }
     @keyframes fadeInOut {
       0%   { opacity: 0; }
@@ -105,7 +107,6 @@ export function hudoa() {
 
   // ===== LOGIC =====
   function endMiniGame() {
-    // chỉ xoá minigame, không xoá toàn bộ body
     scene.remove();
     overlay.remove();
     document.body.classList.remove("zoom");
