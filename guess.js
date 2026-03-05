@@ -114,9 +114,11 @@ function guess() {
         width: 100%;
         max-width: 100%;
         text-align: center;
+        order: 1; /* phần quiz nằm trên */
       }
       #quiz-overlay .image {
         justify-content: center;
+        order: 2; /* phần image nằm dưới */
       }
       #quiz-overlay button {
         margin: 5px;
