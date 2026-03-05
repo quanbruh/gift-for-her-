@@ -17,7 +17,7 @@ function quandeptrai(){
     title.style.top = "30%";
     title.style.left = "25%";
     title.style.color = "white";
-
+    title.style.fontSize = "22px"; // chữ nhỏ hơn, co giãn theo màn hình
     title.style.transform = "translateX(-50%)";
     overlay.appendChild(title);
 
@@ -81,7 +81,8 @@ function quandeptrai(){
 
     // ===== BẤM KHÔNG → HIỆN MESSAGE =====
     noBtn.addEventListener("click", () => {
-        message.textContent = "Tôi biết thừa 😏";
+        message.textContent = "nhân vật chính của ngày hôm nay";
+        message.style.fontSize = "22px"; // chữ nhỏ hơn, co giãn theo màn hình
 
         setTimeout(() => {
             overlay.remove();
