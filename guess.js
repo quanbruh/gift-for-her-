@@ -95,7 +95,7 @@ function guess() {
     @media (max-width: 768px) {
     #quiz-overlay {
       display: flex;
-      flex-direction: row;          /* xếp ngang */
+      flex-direction: column;          /* xếp ngang */
       overflow-x: scroll;           /* cho phép cuộn ngang */
       scroll-snap-type: x mandatory;/* cuộn dừng từng trang */
       -webkit-overflow-scrolling: touch; /* cuộn mượt trên iOS */
