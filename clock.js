@@ -338,6 +338,18 @@ document.addEventListener("mousemove",(e)=>{
 });
 
 
+
+knob.addEventListener("touchstart",(e)=>{
+  e.preventDefault();
+  startDrag();
+});
+document.addEventListener("touchend", endDrag);
+document.addEventListener("touchmove",(e)=>{
+  e.preventDefault();
+  const touch = e.touches[0];
+  moveDrag(touch.clientX, touch.clientY);
+});
+
 /* ===== EVENT ===== */
 
 function triggerEightMarch(){
