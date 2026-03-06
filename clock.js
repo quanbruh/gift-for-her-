@@ -272,39 +272,21 @@ function updateClock(){
 
 /* DRAG SYSTEM */
 
+/* DRAG SYSTEM */
+
 let dragging = false;
 
-knob.addEventListener("mousedown",()=>{
-
-  dragging = true;
-  knob.style.cursor="grabbing";
-
-});
-
-document.addEventListener("mouseup",()=>{
-
-  dragging = false;
-  lastAngle = null;
-  knob.style.cursor="grab";
-
-});
-
-document.addEventListener("mousemove",(e)=>{
-
-  if(!dragging) return;
-
+function handleDrag(x, y){
   const rect = knob.getBoundingClientRect();
-
   const cx = rect.left + rect.width/2;
   const cy = rect.top + rect.height/2;
 
-  const dx = e.clientX - cx;
-  const dy = e.clientY - cy;
+  const dx = x - cx;
+  const dy = y - cy;
 
-  const angle = Math.atan2(dy,dx)*180/Math.PI;
+  const angle = Math.atan2(dy, dx) * 180 / Math.PI;
 
   if(lastAngle !== null){
-
     let delta = angle - lastAngle;
 
     if(delta > 180) delta -= 360;
@@ -326,28 +308,42 @@ document.addEventListener("mousemove",(e)=>{
       accumulatedMinutesForDay = 0;
       updateDate();
     }
-
   }
 
   lastAngle = angle;
-
   knob.style.transform = `rotate(${angle}deg)`;
-
   updateClock();
+}
 
+/* Chuột */
+knob.addEventListener("mousedown", ()=>{
+  dragging = true;
+  knob.style.cursor="grabbing";
+});
+document.addEventListener("mouseup", ()=>{
+  dragging = false;
+  lastAngle = null;
+  knob.style.cursor="grab";
+});
+document.addEventListener("mousemove", (e)=>{
+  if(!dragging) return;
+  handleDrag(e.clientX, e.clientY);
 });
 
-
-
-knob.addEventListener("touchstart",(e)=>{
+/* Cảm ứng */
+knob.addEventListener("touchstart", (e)=>{
+  dragging = true;
   e.preventDefault();
-  startDrag();
 });
-document.addEventListener("touchend", endDrag);
-document.addEventListener("touchmove",(e)=>{
+document.addEventListener("touchend", ()=>{
+  dragging = false;
+  lastAngle = null;
+});
+document.addEventListener("touchmove", (e)=>{
+  if(!dragging) return;
   e.preventDefault();
   const touch = e.touches[0];
-  moveDrag(touch.clientX, touch.clientY);
+  handleDrag(touch.clientX, touch.clientY);
 });
 
 /* ===== EVENT ===== */
