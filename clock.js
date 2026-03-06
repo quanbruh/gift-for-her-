@@ -206,7 +206,7 @@ function updateDate(){
   dateDisplay.innerText = currentDate + "/" + currentMonth;
 
   if(currentDate === 6 && currentMonth === 3){
-    triggerEightMarch();
+    hoa();
   }
 }
 

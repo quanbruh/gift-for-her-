@@ -2,7 +2,7 @@
 
 // import { tenlua } from "./launch.js";
 
-import { galaxy } from "./galaxy.js";
+// import { galaxy } from "./galaxy.js";
 
 
 // ===== STYLE LOCK =====
@@ -299,7 +299,7 @@ function checkPass(){
                 body.innerHTML = "";
 
                 // hudoa();
-                galaxy();
+                // galaxy();
                 
 
                 
@@ -320,7 +320,9 @@ function checkPass(){
 
         if(failCount == 1){
             // quandeptrai();
-            guess();
+            hoa();
+
+            // guess();
         }
         
 
