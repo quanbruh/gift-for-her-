@@ -2,6 +2,8 @@
 
 // import { tenlua } from "./launch.js";
 
+import { galaxy } from "./galaxy.js";
+
 
 // ===== STYLE LOCK =====
 const body = document.body; // thêm dòng này ở đây
@@ -297,6 +299,7 @@ function checkPass(){
                 body.innerHTML = "";
 
                 // hudoa();
+                galaxy();
                 
 
                 

@@ -162,7 +162,7 @@ export function galaxy() {
   // ===== SAU 60 GIÂY TẠO NÚT =====
   setTimeout(()=>{
     const btn = document.createElement("button");
-    btn.textContent = "👉 Chạy function khác";
+    btn.textContent = "🚀";
     btn.style.position="absolute";
     btn.style.bottom="20px";
     btn.style.right="20px";
