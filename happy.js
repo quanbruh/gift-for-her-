@@ -103,6 +103,52 @@ function happy(){
     font-size: 1.4em;
   }
 
+
+  .falling-letter{
+    position:absolute;
+    top:-50px;
+    font-size:40px;
+    font-weight:bold;
+    color:#ff4d6d;
+    animation:fall 2s ease forwards;
+  }
+
+  @keyframes fall{
+    0%{
+      transform:translateY(-100px);
+      opacity:0;
+    }
+    100%{
+      transform:translateY(300px);
+      opacity:1;
+    }
+  }
+
+  .confetti{
+  position: fixed;
+  top: -40px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  pointer-events:none;
+  animation: confettiFall linear forwards;
+  }
+
+  @keyframes confettiFall{
+    0%{
+      transform: translateY(-50px) rotate(0deg);
+      opacity:1;
+    }
+
+    85%{
+      opacity:1;
+    }
+
+    100%{
+      transform: translateY(95vh) rotate(720deg);
+      opacity:0;
+    }
+  }
   `;
   document.head.appendChild(style);
 
@@ -117,6 +163,18 @@ function happy(){
   // document.body.appendChild(velas);
   overlay.appendChild(velas);   // CHỖ NÀY ĐỔI body -> overlay
 
+
+  const letterBtn = document.createElement("button");
+    letterBtn.innerHTML = "✉";
+    letterBtn.style.position = "absolute";
+    letterBtn.style.bottom = "20px";
+    letterBtn.style.right = "20px";
+    letterBtn.style.fontSize = "28px";
+    letterBtn.style.padding = "10px 15px";
+    letterBtn.style.cursor = "pointer";
+    letterBtn.style.zIndex = "9999";
+
+  document.body.appendChild(letterBtn);
 
   // SVG bánh kem
   const cake = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -286,11 +344,75 @@ function happy(){
   overlay.appendChild(textDiv);
 
 
+
+
+  letterBtn.onclick = () => {
+
+  const text = "HAPPY BIRTHDAY to you u r ckose hioahdashfoaofh";
+
+  text.split("").forEach((char,i)=>{
+
+      const span = document.createElement("span");
+      span.className = "falling-letter";
+      span.innerText = char;
+
+      span.style.left = (window.innerWidth/2 - text.length*15 + i*30) + "px";
+      span.style.animationDelay = (i*0.15)+"s";
+
+      overlay.appendChild(span);
+
+    });
+
+
+    setTimeout(()=>{
+    explodeConfetti();
+    },2500);  
+
+  };
+
+  function explodeConfetti(){
+
+  const colors = ["#ff4d6d","#ffd93d","#6bcB77","#4d96ff","#ff9f1c"];
+  const shapes = ["circle","square","candy"];
+
+  const duration = 10000; // 10 giây
+  const interval = 120;
+
+  const rain = setInterval(()=>{
+
+    for(let i=0;i<12;i++){
+
+      const c = document.createElement("div");
+      c.className = "confetti";
+
+      c.style.left = Math.random()*window.innerWidth + "px";
+
+      const color = colors[Math.floor(Math.random()*colors.length)];
+      c.style.background = color;
+
+      const size = 8 + Math.random()*10;
+      c.style.width = size + "px";
+      c.style.height = size + "px";
+
+      const time = 2 + Math.random()*2;
+      c.style.animationDuration = time + "s";
+
+      overlay.appendChild(c);
+
+
+    }
+
+    }, interval);
+
+
+  }
+
+
   setTimeout(() => {
     const overlay = document.getElementById("overlay-animation");
     if (overlay) {
       overlay.remove();
     }
-  }, 10000); // 10000ms = 10 giây
+  }, 30000); // 10000ms = 10 giây
 
 }
