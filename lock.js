@@ -323,7 +323,7 @@ function checkPass(){
 
                 
                 body.innerHTML = "";
-
+                
                 hudoa();
                 // galaxy();
                 
@@ -344,11 +344,15 @@ function checkPass(){
             hintLeft.classList.add("show");
         }
 
-        if(failCount == 2){
+        if(failCount == 3){
             quandeptrai();
         }
 
         if(failCount == 1){
+            bongbay();
+        }
+
+        if(failCount == 2){
             guess();
         }
         

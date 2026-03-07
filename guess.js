@@ -16,127 +16,133 @@ function guess() {
   const style = document.createElement('style');
   style.textContent = `
     #quiz-overlay {
-      display: flex;
-      flex-wrap: wrap;
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
+  display: flex;
+  flex-wrap: wrap;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  overflow: hidden; /* chặn cuộn ngang/dọc */
+}
 
-    #quiz-overlay .quiz {
-      width: 100%;
-      max-width: 100%;
-      text-align: center;   /* căn giữa nội dung */
-      display: flex;
-      flex-direction: column;
-      align-items: center;  /* căn giữa theo chiều ngang */
-      order: 1;             /* đảm bảo nằm trên */
-    }
+#quiz-overlay .quiz {
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  order: 1; /* quiz nằm trên */
+}
 
+#quiz-overlay .quiz h2 { color: #2c3e50; }
+#quiz-overlay .buttons { margin-top: 15px; }
+#quiz-overlay button {
+  padding: 8px 16px;
+  margin-right: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+}
 
-    #quiz-overlay .quiz h2 { color: #2c3e50; }
-    #quiz-overlay .buttons { margin-top: 15px; }
-    #quiz-overlay button {
-      padding: 8px 16px;
-      margin-right: 10px;
-      cursor: pointer;
-      border: none;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-    
-    #quiz-overlay .duoi {
-      background-color: #8e44ad;
-      color: white;
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
+#quiz-overlay .duoi {
+  background-color: #8e44ad;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+}
 
-    #quiz-overlay .image {
-      width: 40%;
-      max-width: 40%;
-      position: relative;
-      display: flex;
-      justify-content: center; /* căn giữa ngang */
-      align-items: center;     /* căn giữa dọc */
-      margin-top: 20px;        /* tạo khoảng cách với quiz */
-      order: 2;                /* đảm bảo nằm dưới quiz */
-    }
+#quiz-overlay .image {
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  order: 2; /* ảnh nằm dưới quiz */
+}
 
+#quiz-overlay .image img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  visibility: hidden;
+  object-fit: contain; /* ảnh vừa khung */
+}
 
-    #quiz-overlay .image img {
-      max-width: 100%;
-      height: auto;
-      border: 2px solid #ccc;
-      border-radius: 8px;
-      visibility: hidden;
-    }
+#quiz-overlay .overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 0);
+  opacity: 1;
+  border-radius: 8px;
+}
+#quiz-overlay .overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
 
-    #quiz-overlay .overlay {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgb(0, 0, 0);
-      opacity: 1;
-      border-radius: 8px;
-    }
-    #quiz-overlay .overlay.hidden {
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 1s ease;
-    }
+#quiz-overlay .send {
+  padding: 8px 16px;
+  margin-left: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #27ae60;
+  color: white;
+}
 
-    #quiz-overlay .send {
-    padding: 8px 16px;
-    margin-left: 10px;
-    cursor: pointer;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    background-color: #27ae60;
-    color: white;
-    } 
+#quiz-overlay .message {
+  margin-top: 20px;
+  font-weight: bold;
+  color: #2980b9;
+  opacity: 1;
+  transition: opacity 1s ease;
+}
+#quiz-overlay .message.fade { opacity: 0; }
 
+@media (max-width: 768px) {
+  body {
+    overflow: hidden; /* chặn cuộn toàn trang */
+  }
+  #quiz-overlay {
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden; /* chặn cuộn ngang/dọc */
+  }
+  #quiz-overlay .quiz {
+    width: 100%;
+    text-align: center;
+    order: 1;
+  }
+  #quiz-overlay .image {
+    width: 100%;
+    justify-content: center;
+    order: 2;
+  }
+  #quiz-overlay button {
+    margin: 5px;
+    width: 80%;
+    font-size: 16px;
+  }
+  #quiz-overlay .duoi {
+    width: 90%;
+  }
+}
 
-
-    #quiz-overlay .message {
-      margin-top: 20px;
-      font-weight: bold;
-      color: #2980b9;
-      opacity: 1;
-      transition: opacity 1s ease;
-    }
-    #quiz-overlay .message.fade { opacity: 0; }
-
-    @media (max-width: 768px) {
-      #quiz-overlay {
-        flex-direction: column;
-        align-items: center;
-      }
-      #quiz-overlay .quiz, #quiz-overlay .image {
-        width: 100%;
-        max-width: 100%;
-        text-align: center;
-        order: 1; /* phần quiz nằm trên */
-      }
-      #quiz-overlay .image {
-        justify-content: center;
-        order: 2; /* phần image nằm dưới */
-      }
-      #quiz-overlay button {
-        margin: 5px;
-        width: 80%;
-        font-size: 16px;
-      }
-      #quiz-overlay .duoi {
-        width: 90%;
-      }
-    }
   `;
   document.head.appendChild(style);
 

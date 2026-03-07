@@ -37,10 +37,10 @@ function bongbay() {
 
   /* ===== BÓNG ĐẶC BIỆT ===== */
   .special-balloon {
-    width: 120px;
-    height: 150px;
-    background: gold !important;
-    animation: floatUpFast 4s linear forwards;
+    width: 100px;
+    height: 130px;
+    background: black !important;
+    animation: floatUpFast 0.5s linear forwards;
     box-shadow: 0 0 20px gold;
   }
 
@@ -50,7 +50,7 @@ function bongbay() {
   }
 
   .explode {
-    animation: explodeAnim 0.5s forwards;
+    animation: explodeAnim 1s forwards;
   }
 
   @keyframes explodeAnim {
@@ -63,7 +63,7 @@ function bongbay() {
     width: 4px;
     height: 4px;
     opacity: 0.8;
-    animation: confettiAnim 1s forwards;
+    animation: confettiAnim 0.5s forwards;
   }
 
   @keyframes confettiAnim {
@@ -133,9 +133,9 @@ function bongbay() {
     balloon.className = "balloon special-balloon";
     balloon.style.left = Math.random() * window.innerWidth + "px";
 
-    addInteraction(balloon, (e) => {
-      explodeBalloon(balloon, e);
-    });
+    // addInteraction(balloon, (e) => {
+    //   explodeBalloon(balloon, e);
+    // });
 
     document.body.appendChild(balloon);
 
