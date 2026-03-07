@@ -171,6 +171,7 @@ export function galaxy() {
     document.body.appendChild(btn);
   
     btn.addEventListener("click",()=>{
+      document.body.innerHTML = "";
       otherFunction(); // 👉 thay bằng function bạn muốn gọi
     });
   },5000);
@@ -182,10 +183,7 @@ export function galaxy() {
     renderer.setSize(window.innerWidth,window.innerHeight);
   });
   
-  // ===== Function khác (ví dụ) =====
-  function otherFunction(){
-    alert("Function khác đã được gọi!");
-  }
+  
   
 }
 

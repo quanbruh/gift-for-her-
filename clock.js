@@ -202,13 +202,59 @@ let accumulatedMinutesForDay = 0;
 let currentDate = 5;
 let currentMonth = 3;
 
+let hoadep = true;
+let sinhnhat = true;
+
+
+function clockdead(){
+
+  clock.style.animation = "crazySpin 1.5s linear";
+
+  setTimeout(()=>{
+
+    clock.style.animation = "fallDown 1s ease-in forwards";
+
+    setTimeout(()=>{
+
+      hole.style.opacity = 1;
+
+    },1000);
+
+  },1500);
+
+}
+
 function updateDate(){
   dateDisplay.innerText = currentDate + "/" + currentMonth;
 
-  if(currentDate === 6 && currentMonth === 3){
-    // hoa();
+  if(currentDate === 6 && currentMonth === 3 && hoadep){
+    hoadep = false;
+    hoa();
+    
+  }
+
+  else if(currentDate === 8 && currentMonth === 3 && sinhnhat){
+    sinhnhat = false;
     happy();
   }
+
+  else if(currentDate === 10 && currentMonth === 3){
+    clockdead();
+  }
+  
+  else if(currentDate === 9 && currentMonth === 3){
+    // chocolate();
+  }
+
+
+  else if(currentDate === 7 || currentDate === 9 || currentDate === 10 || currentDate === 11 ){
+    document.dispatchEvent(new Event("hoaend"));
+    document.dispatchEvent(new Event("birthend"));
+  }
+
+  
+
+
 }
 
 updateDate();
@@ -349,23 +395,7 @@ document.addEventListener("touchmove", (e)=>{
 
 /* ===== EVENT ===== */
 
-function triggerEightMarch(){
 
-  clock.style.animation = "crazySpin 1.5s linear";
-
-  setTimeout(()=>{
-
-    clock.style.animation = "fallDown 1s ease-in forwards";
-
-    setTimeout(()=>{
-
-      hole.style.opacity = 1;
-
-    },1000);
-
-  },1500);
-
-}
 
 
 hole.addEventListener("click",()=>{

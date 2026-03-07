@@ -99,7 +99,7 @@ export function hudoa() {
   const overlay = document.createElement("div");
   overlay.className = "overlay";
   overlay.id = "overlay";
-  overlay.innerHTML = `<img id="gif" src="jumpscare.gif" alt="Surprise!">`;
+  overlay.innerHTML = `<img id="gif" src="image/jumpscare.gif" alt="Surprise!">`;
   document.body.appendChild(overlay);
 
   const gift = document.getElementById("gift");
@@ -119,8 +119,18 @@ export function hudoa() {
     setTimeout(() => {
       overlay.classList.add("show");
 
+      const scareMusic = new Audio("sound/jumpscare.mp3");
+       
+
+      setTimeout(() => {
+      scareMusic.play();
+      
+    }, 1500);
+
       setTimeout(() => {
         gif.style.animation = "fadeInOut 0.5s forwards";
+        // scareMusic.pause();
+        // scareMusic.currentTime = 0; // reset về đầu
         gif.addEventListener("animationend", endMiniGame, { once: true });
       }, 2000);
 

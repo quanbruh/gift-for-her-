@@ -1,4 +1,4 @@
-// import { hudoa } from './jumpscare.js';
+import { hudoa } from './jumpscare.js';
 
 // import { tenlua } from "./launch.js";
 
@@ -21,7 +21,7 @@ body {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    background: url("galaxy.jpg") no-repeat center center fixed;
+    background: url("image/galaxy.jpg") no-repeat center center fixed;
     background-size: cover;
     font-family: Arial;
     position: relative;
@@ -164,7 +164,7 @@ body {
     top: 20%; /* 1/3 từ trên xuống */
     left: 5%;
     font-size: 20px;
-    color: yellow;
+    color: cyan;
     max-width: 45%;
     opacity: 0;
     transition: opacity 0.5s;
@@ -193,6 +193,26 @@ body {
 }
 `;
 document.head.appendChild(style);
+
+
+// ===== NHẠC NỀN =====
+let music;
+
+window.addEventListener("load", () => {
+  music = new Audio("sound/part1.mp3");
+  music.loop = true; // phát lặp lại
+  // thử phát ngay
+  music.play().catch(err => {
+    console.log("Autoplay bị chặn, chờ click:", err);
+    // nếu bị chặn thì phát sau cú click đầu tiên
+    document.body.addEventListener("click", () => {
+      music.play();
+    }, { once: true });
+  });
+});
+
+
+
 
 
 // ===== UI =====
@@ -250,7 +270,7 @@ document.body.appendChild(hintLeft);
 
 
 // ===== LOGIC =====
-const correctPass = "11111111";
+const correctPass = "17032011";
 let input = "";
 let failCount = 0; // đếm số lần sai
 
@@ -264,7 +284,12 @@ const hintMessages = [
     "Gà ơi là gà",
     "Sai nữa rồi, gà thiệt",
     "Lần này cũng sai, gà ghê",
-    "Thêm lần nữa, gà bất tận"
+    "Thêm lần nữa, gà bất tận",
+    "ha",
+    "que",
+    "gà",
+    ">>>",
+    "ngốc"
 ];
 
 function updateDots(){
@@ -276,6 +301,7 @@ function updateDots(){
 function checkPass(){
     if(input === correctPass){
         // Hiệu ứng chữ mở khóa thành công
+        music.pause();
         const successMsg = document.createElement("div");
         successMsg.className = "success-message";
         successMsg.textContent = "Mở khóa thành công!";
@@ -298,7 +324,7 @@ function checkPass(){
                 
                 body.innerHTML = "";
 
-                // hudoa();
+                hudoa();
                 // galaxy();
                 
 
@@ -313,16 +339,17 @@ function checkPass(){
         errorMessage.classList.add("show");
 
         // Hiện hint theo số lần sai (tối đa 5)
-        if(failCount <= 5){
+        if(failCount <= 10){
             hintLeft.textContent = hintMessages[failCount-1];
             hintLeft.classList.add("show");
         }
 
-        if(failCount == 1){
-            // quandeptrai();
-            hoa();
+        if(failCount == 2){
+            quandeptrai();
+        }
 
-            // guess();
+        if(failCount == 1){
+            guess();
         }
         
 

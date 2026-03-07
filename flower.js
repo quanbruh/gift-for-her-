@@ -1178,8 +1178,9 @@ function hoa(){
     overlay.classList.remove("not-loaded");
     },100);
 
-    // xoá minigame
-    setTimeout(()=>{
-    overlay.remove();
-    },10000);
+    
+
+    document.addEventListener("hoaend", () => {
+        overlay.remove();
+    });   
 }

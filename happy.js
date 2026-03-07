@@ -408,11 +408,8 @@ function happy(){
   }
 
 
-  setTimeout(() => {
-    const overlay = document.getElementById("overlay-animation");
-    if (overlay) {
-      overlay.remove();
-    }
-  }, 30000); // 10000ms = 10 giây
+  document.addEventListener("birthend", () => {
+    overlay.remove();
+  });
 
 }

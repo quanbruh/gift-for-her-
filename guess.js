@@ -23,10 +23,15 @@ function guess() {
     }
 
     #quiz-overlay .quiz {
-      width: 50%;
-      max-width: 50%;
-      text-align: left;
+      width: 100%;
+      max-width: 100%;
+      text-align: center;   /* căn giữa nội dung */
+      display: flex;
+      flex-direction: column;
+      align-items: center;  /* căn giữa theo chiều ngang */
+      order: 1;             /* đảm bảo nằm trên */
     }
+
 
     #quiz-overlay .quiz h2 { color: #2c3e50; }
     #quiz-overlay .buttons { margin-top: 15px; }
@@ -52,12 +57,16 @@ function guess() {
     }
 
     #quiz-overlay .image {
-      width: 50%;
-      max-width: 50%;
+      width: 100%;
+      max-width: 100%;
       position: relative;
       display: flex;
-      justify-content: flex-end;
+      justify-content: center; /* căn giữa ngang */
+      align-items: center;     /* căn giữa dọc */
+      margin-top: 20px;        /* tạo khoảng cách với quiz */
+      order: 2;                /* đảm bảo nằm dưới quiz */
     }
+
 
     #quiz-overlay .image img {
       max-width: 100%;
@@ -163,11 +172,11 @@ function guess() {
 
 
   const quizData = [
-    {question: "Tôi có mặt khắp nơi, nhưng bạn không thể nhìn thấy tôi. Tôi là gì?", image: "image1.jpg", answer:"hà mã"},
-    {question: "Cái gì càng lau càng ướt?", image: "image2.jpg", answer:"ngựa "},
-    {question: "Con gì đập thì sống, không đập thì chết?", image: "image3.jpg", answer:"hà mã"},
-    {question: "Con gì đập thì sống, không đập thì chết?", image: "image4.jpg", answer:"hà mã"},
-    {question: "Con gì đập thì sống, không đập thì chết?", image: "image5.jpg", answer:"hà mã"}
+    {question: "Tôi có mặt khắp nơi, nhưng bạn không thể nhìn thấy tôi. Tôi là gì?", image: "image/image1.jpg", answer:"hà mã"},
+    {question: "Cái gì càng lau càng ướt?", image: "image/image2.jpg", answer:"ngựa "},
+    {question: "Con gì đập thì sống, không đập thì chết?", image: "image/image3.jpg", answer:"hà mã"},
+    {question: "Con gì đập thì sống, không đập thì chết?", image: "image/image4.jpg", answer:"hà mã"},
+    {question: "Con gì đập thì sống, không đập thì chết?", image: "image/image5.jpg", answer:"hà mã"}
   ];
 
   let currentIndex = 0;
