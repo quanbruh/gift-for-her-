@@ -43,8 +43,7 @@ function guess() {
       border-radius: 4px;
       font-size: 14px;
     }
-    #quiz-overlay .yes { background-color: #27ae60; color: white; }
-    #quiz-overlay .no { background-color: #c0392b; color: white; }
+    
     #quiz-overlay .duoi {
       background-color: #8e44ad;
       color: white;
@@ -57,8 +56,8 @@ function guess() {
     }
 
     #quiz-overlay .image {
-      width: 100%;
-      max-width: 100%;
+      width: 40%;
+      max-width: 40%;
       position: relative;
       display: flex;
       justify-content: center; /* căn giữa ngang */
