@@ -15,7 +15,7 @@ function guess() {
   // Tạo CSS riêng cho overlay
   const style = document.createElement('style');
   style.textContent = `
-    #quiz-overlay {
+#quiz-overlay {
   display: flex;
   flex-wrap: wrap;
   font-family: Arial, sans-serif;
@@ -50,13 +50,16 @@ function guess() {
 #quiz-overlay .duoi {
   background-color: #8e44ad;
   color: white;
-  padding: 10px 20px;
+  padding: 8px 16px;
   font-size: 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   margin-top: 20px;
 }
+
+
+
 
 #quiz-overlay .image {
   width: 100%;
@@ -70,7 +73,7 @@ function guess() {
 }
 
 #quiz-overlay .image img {
-  max-width: 100%;
+  max-width: 50%;
   height: auto;
   border: 2px solid #ccc;
   border-radius: 8px;
@@ -253,9 +256,9 @@ function guess() {
   }
 
 
-  
 
-  
+
+
   duoiBtn.addEventListener('click', () => {
     message.textContent = "Ai cho cô dỗi hahaha";
     message.classList.remove('fade');

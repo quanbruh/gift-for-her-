@@ -198,18 +198,18 @@ document.head.appendChild(style);
 // ===== NHẠC NỀN =====
 let music;
 
-window.addEventListener("load", () => {
-  music = new Audio("sound/part1.mp3");
-  music.loop = true; // phát lặp lại
-  // thử phát ngay
-  music.play().catch(err => {
-    console.log("Autoplay bị chặn, chờ click:", err);
-    // nếu bị chặn thì phát sau cú click đầu tiên
-    document.body.addEventListener("click", () => {
-      music.play();
-    }, { once: true });
-  });
-});
+// window.addEventListener("load", () => {
+//   music = new Audio("sound/part1.mp3");
+//   music.loop = true; // phát lặp lại
+//   // thử phát ngay
+//   music.play().catch(err => {
+//     console.log("Autoplay bị chặn, chờ click:", err);
+//     // nếu bị chặn thì phát sau cú click đầu tiên
+//     document.body.addEventListener("click", () => {
+//       music.play();
+//     }, { once: true });
+//   });
+// });
 
 
 
@@ -348,11 +348,9 @@ function checkPass(){
             quandeptrai();
         }
 
-        if(failCount == 1){
-            bongbay();
-        }
+        
 
-        if(failCount == 2){
+        if(failCount == 1){
             guess();
         }
         
